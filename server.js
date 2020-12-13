@@ -1,12 +1,36 @@
 const express = require("express");
-
+const fs = require("fs");
+const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const { notes } = require("./db/db");
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+function validateNote(note) {
+  if (!note.title || typeof note.title !== "string") {
+    return false;
+  }
+  if (!note.text || typeof note.title !== "string") {
+    return false;
+  }
+  return true;
+}
+
 function findByRouteName(routeName, notesArray) {
   const result = notesArray.filter((note) => note.routeName === routeName)[0];
   return result;
+}
+
+function createNewNote(body, notesArray) {
+  const note = body;
+  notesArray.push(note);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ notes: notesArray }, null, 2)
+  );
+  return note;
 }
 
 app.get("/api/notes", (req, res) => {
@@ -19,6 +43,15 @@ app.get("/api/notes/:routeName", (req, res) => {
     res.json(result);
   } else {
     res.status(404).send("Note Not Found!");
+  }
+});
+
+app.post("/api/notes", (req, res) => {
+  if (!validateNote(req.body)) {
+    res.status(400).send("This note is not properly formatted.");
+  } else {
+    const note = createNewNote(req.body, notes);
+    res.json(note);
   }
 });
 
