@@ -19,8 +19,8 @@ function validateNote(note) {
   return true;
 }
 
-function findByRouteName(routeName, notesArray) {
-  const result = notesArray.filter((note) => note.routeName === routeName)[0];
+function findById(id, notesArray) {
+  const result = notesArray.filter((note) => note.id === id)[0];
   return result;
 }
 
@@ -38,8 +38,8 @@ app.get("/api/notes", (req, res) => {
   res.json(notes);
 });
 
-app.get("/api/notes/:routeName", (req, res) => {
-  const result = findByRouteName(req.params.routeName, notes);
+app.get("/api/notes/:id", (req, res) => {
+  const result = findById(req.params.id, notes);
   if (result) {
     res.json(result);
   } else {
@@ -48,6 +48,7 @@ app.get("/api/notes/:routeName", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
+
   if (!validateNote(req.body)) {
     res.status(400).send("This note is not properly formatted.");
   } else {

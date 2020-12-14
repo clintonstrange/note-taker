@@ -57,17 +57,32 @@ const renderActiveNote = () => {
     noteTitle.setAttribute("readonly", true);
     noteText.setAttribute("readonly", true);
     noteTitle.value = activeNote.title;
-    noteText.value = activeNote.title;
+    noteText.value = activeNote.text;
   } else {
     noteTitle.value = "";
     noteText.value = "";
   }
 };
 
+const setNoteId = async (notes) => {
+  let jsonNotes = await notes.json();
+  console.log(jsonNotes);
+  const result = jsonNotes.length.toString();
+  console.log(result);
+  return result;
+};
+
+function getNoteId() {
+  const id = getNotes().then(setNoteId);
+  console.log(id);
+  return id;
+}
+
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
+    id: getNoteId(),
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
