@@ -64,30 +64,30 @@ const renderActiveNote = () => {
   }
 };
 
-const setNoteId = async (notes) => {
+const getNoteId = async (notes) => {
   let jsonNotes = await notes.json();
   console.log(jsonNotes);
-  const result = jsonNotes.length.toString();
-  console.log(result);
-  return result;
+  let result = jsonNotes.length.toString();
+  console.log("result = " + result);
+  let id = result;
+  id++;
+  console.log("id = " + id);
+  return id;
 };
 
-function getNoteId() {
-  const id = getNotes().then(setNoteId);
-  console.log(id);
-  return id;
-}
-
-const handleNoteSave = () => {
+const handleNoteSave = async () => {
+  const newID = await getNotes().then(getNoteId);
+  console.log(newID);
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
-    id: getNoteId(),
+    id: newID,
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
+  console.log(newNote);
 };
 
 // Delete the clicked note
