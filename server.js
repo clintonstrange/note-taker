@@ -36,7 +36,6 @@ app.get("/api/notes", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
-  console.log(req.body);
   if (!validateNote(req.body)) {
     res.status(400).send("This note is not properly formatted.");
   } else {
