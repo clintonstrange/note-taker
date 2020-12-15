@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
+const uniqid = require("uniqid");
 let { notes } = require("./db/db");
 
 app.use(express.urlencoded({ extended: true }));
@@ -19,13 +20,9 @@ function validateNote(note) {
   return true;
 }
 
-function findById(id, notesArray) {
-  const result = notesArray.filter((note) => note.id === id)[0];
-  return result;
-}
-
 function createNewNote(body, notesArray) {
   const note = body;
+  note.id = uniqid();
   notesArray.push(note);
   fs.writeFileSync(
     path.join(__dirname, "./db/db.json"),
@@ -38,15 +35,6 @@ app.get("/api/notes", (req, res) => {
   res.json(notes);
 });
 
-app.get("/api/notes/:id", (req, res) => {
-  const result = findById(req.params.id, notes);
-  if (result) {
-    res.json(result);
-  } else {
-    res.status(404).send("Note Not Found!");
-  }
-});
-
 app.post("/api/notes", (req, res) => {
   if (!validateNote(req.body)) {
     res.status(400).send("This note is not properly formatted.");
@@ -57,7 +45,7 @@ app.post("/api/notes", (req, res) => {
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-  notes = notes.filter((note) => parseInt(note.id) !== parseInt(req.params.id));
+  notes = notes.filter((note) => note.id !== req.params.id);
 
   fs.writeFileSync(
     path.join(__dirname, "./db/db.json"),
@@ -67,12 +55,12 @@ app.delete("/api/notes/:id", (req, res) => {
   res.json(notes);
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
-});
-
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../public/index.html"));
 });
 
 app.listen(PORT, () => {

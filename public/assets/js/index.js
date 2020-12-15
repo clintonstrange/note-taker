@@ -68,7 +68,6 @@ const renderActiveNote = () => {
 
 const handleNoteSave = async () => {
   const newID = await getNotes();
-  // console.log(newID);
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
@@ -78,7 +77,6 @@ const handleNoteSave = async () => {
     getAndRenderNotes();
     renderActiveNote();
   });
-  // console.log(newNote);
 };
 
 // Delete the clicked note
@@ -122,7 +120,6 @@ const handleRenderSaveBtn = () => {
 // Render the list of note titles
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
-  console.log(jsonNotes);
   if (window.location.pathname === "/notes") {
     noteList.forEach((el) => (el.innerHTML = ""));
   }
