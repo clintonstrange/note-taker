@@ -66,19 +66,8 @@ const renderActiveNote = () => {
   }
 };
 
-const getNoteId = async (notes) => {
-  let jsonNotes = await notes.json();
-  // console.log(jsonNotes);
-  let result = jsonNotes.length.toString();
-  // console.log("result = " + result);
-  let id = result;
-  id++;
-  // console.log(id.toString());
-  return id.toString();
-};
-
 const handleNoteSave = async () => {
-  const newID = await getNotes().then(getNoteId);
+  const newID = await getNotes();
   // console.log(newID);
   const newNote = {
     title: noteTitle.value,
