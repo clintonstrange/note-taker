@@ -68,18 +68,18 @@ const renderActiveNote = () => {
 
 const getNoteId = async (notes) => {
   let jsonNotes = await notes.json();
-  console.log(jsonNotes);
+  // console.log(jsonNotes);
   let result = jsonNotes.length.toString();
-  console.log("result = " + result);
+  // console.log("result = " + result);
   let id = result;
   id++;
-  console.log("id = " + id);
-  return id;
+  // console.log(id.toString());
+  return id.toString();
 };
 
 const handleNoteSave = async () => {
   const newID = await getNotes().then(getNoteId);
-  console.log(newID);
+  // console.log(newID);
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
@@ -89,7 +89,7 @@ const handleNoteSave = async () => {
     getAndRenderNotes();
     renderActiveNote();
   });
-  console.log(newNote);
+  // console.log(newNote);
 };
 
 // Delete the clicked note
@@ -103,7 +103,6 @@ const handleNoteDelete = (e) => {
   if (activeNote.id === noteId) {
     activeNote = {};
   }
-  console.log(noteId);
   deleteNote(noteId).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -134,6 +133,7 @@ const handleRenderSaveBtn = () => {
 // Render the list of note titles
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
+  console.log(jsonNotes);
   if (window.location.pathname === "/notes") {
     noteList.forEach((el) => (el.innerHTML = ""));
   }

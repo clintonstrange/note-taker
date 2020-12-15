@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 const app = express();
-const { notes } = require("./db/db");
+let { notes } = require("./db/db");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -57,7 +57,14 @@ app.post("/api/notes", (req, res) => {
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-    res.json(notes.filter(note => note.id !== parseInt(req.params.id)));
+  notes = notes.filter((note) => parseInt(note.id) !== parseInt(req.params.id));
+
+  fs.writeFileSync(
+    path.join(__dirname, "./db/db.json"),
+    JSON.stringify({ notes: notes }, null, 2)
+  );
+
+  res.json(notes);
 });
 
 app.get("/", (req, res) => {
