@@ -48,13 +48,16 @@ app.get("/api/notes/:id", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
-
   if (!validateNote(req.body)) {
     res.status(400).send("This note is not properly formatted.");
   } else {
     const note = createNewNote(req.body, notes);
     res.json(note);
   }
+});
+
+app.delete("/api/notes/:id", (req, res) => {
+    res.json(notes.filter(note => note.id !== parseInt(req.params.id)));
 });
 
 app.get("/", (req, res) => {
